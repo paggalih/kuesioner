@@ -140,7 +140,6 @@
       min-height: 20px;
     }
 
-    /* Responses */
     .responses-section h2 {
       font-size: 1.2rem;
       margin-bottom: 16px;
@@ -203,11 +202,6 @@
       color: #64748b;
     }
 
-    #cards-loading {
-      color: #94a3b8;
-      font-size: 0.9rem;
-    }
-
     @media (max-width: 480px) {
       .checkbox-grid { grid-template-columns: 1fr; }
     }
@@ -247,7 +241,7 @@
 
   <div class="responses-section">
     <h2>Student Responses</h2>
-    <div id="cards"><p id="cards-loading">Loading responses...</p></div>
+    <div id="cards"><p style="color:#94a3b8;">Loading responses...</p></div>
     <div class="pagination">
       <button id="prevBtn" onclick="changePage(-1)" disabled>← Prev</button>
       <span id="pageInfo"></span>
@@ -258,7 +252,7 @@
 </div>
 
 <script>
-  const API = "https://script.google.com/macros/s/AKfycbz2QablRQAr8c9QLvamoDo41vI975Rc6I27CdelMO-JtVSdbQnoq3-Y5GpWqfHwqWSJ_g/exec"; // ← replace this
+  const API = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // ← replace this
   const VALID_ID = /^\d{8}$/; // adjust to your student ID format
   const PAGE_SIZE = 5;
 
@@ -312,40 +306,67 @@
   }
 
   async function submitForm() {
-try {
-  const res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({ studentId, difficulties, story })
-  });
-  const result = await res.json();
+    const studentId = document.getElementById("studentId").value.trim();
+    const boxes = [...document.querySelectorAll("#checkboxes input:checked")];
+    const difficulties = boxes.map(b => b.value).join(", ");
+    const story = document.getElementById("story").value.trim();
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("submitBtn");
 
-  if (result.status === "unregistered") {
-    msg.style.color = "#ef4444";
-    msg.textContent = "Student number not recognized.";
-    btn.disabled = false;
-    return;
-  }
+    if (!VALID_ID.test(studentId)) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Invalid student number format.";
+      return;
+    }
+    if (!difficulties) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Select at least one difficulty.";
+      return;
+    }
+    if (!story) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Please write your story.";
+      return;
+    }
 
-  if (result.status === "duplicate") {
-    msg.style.color = "#ef4444";
-    msg.textContent = "This student number has already submitted.";
-    btn.disabled = false;
-    return;
-  }
+    btn.disabled = true;
+    msg.style.color = "#64748b";
+    msg.textContent = "Submitting...";
 
-  msg.style.color = "#16a34a";
-  msg.textContent = "Submitted! Thank you.";
-  document.getElementById("studentId").value = "";
-  document.querySelectorAll("#checkboxes input").forEach(b => b.checked = false);
-  document.getElementById("story").value = "";
-  btn.disabled = false;
-  loadResponses();
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ studentId, difficulties, story })
+      });
+      const result = await res.json();
 
-} catch {
-  msg.style.color = "#ef4444";
-  msg.textContent = "Submission failed. Try again.";
-  btn.disabled = false;
-}
+      if (result.status === "unregistered") {
+        msg.style.color = "#ef4444";
+        msg.textContent = "Student number not recognized.";
+        btn.disabled = false;
+        return;
+      }
+
+      if (result.status === "duplicate") {
+        msg.style.color = "#ef4444";
+        msg.textContent = "This student number has already submitted.";
+        btn.disabled = false;
+        return;
+      }
+
+      msg.style.color = "#16a34a";
+      msg.textContent = "Submitted! Thank you.";
+      document.getElementById("studentId").value = "";
+      document.querySelectorAll("#checkboxes input").forEach(b => b.checked = false);
+      document.getElementById("story").value = "";
+      btn.disabled = false;
+      loadResponses();
+
+    } catch {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Submission failed. Try again.";
+      btn.disabled = false;
+    }
   }
 
   loadResponses();
