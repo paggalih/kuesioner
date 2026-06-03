@@ -258,7 +258,7 @@
 </div>
 
 <script>
-  const API = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // ← replace this
+  const API = "https://script.google.com/macros/s/AKfycbz2QablRQAr8c9QLvamoDo41vI975Rc6I27CdelMO-JtVSdbQnoq3-Y5GpWqfHwqWSJ_g/exec"; // ← replace this
   const VALID_ID = /^\d{8}$/; // adjust to your student ID format
   const PAGE_SIZE = 5;
 
@@ -312,6 +312,12 @@
   }
 
   async function submitForm() {
+if (result.status === "unregistered") {
+  msg.style.color = "#ef4444";
+  msg.textContent = "Student number not recognized.";
+  btn.disabled = false;
+  return;
+}
     const studentId = document.getElementById("studentId").value.trim();
     const boxes = [...document.querySelectorAll("#checkboxes input:checked")];
     const difficulties = boxes.map(b => b.value).join(", ");
