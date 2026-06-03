@@ -312,69 +312,40 @@
   }
 
   async function submitForm() {
-if (result.status === "unregistered") {
-  msg.style.color = "#ef4444";
-  msg.textContent = "Student number not recognized.";
+try {
+  const res = await fetch(API, {
+    method: "POST",
+    body: JSON.stringify({ studentId, difficulties, story })
+  });
+  const result = await res.json();
+
+  if (result.status === "unregistered") {
+    msg.style.color = "#ef4444";
+    msg.textContent = "Student number not recognized.";
+    btn.disabled = false;
+    return;
+  }
+
+  if (result.status === "duplicate") {
+    msg.style.color = "#ef4444";
+    msg.textContent = "This student number has already submitted.";
+    btn.disabled = false;
+    return;
+  }
+
+  msg.style.color = "#16a34a";
+  msg.textContent = "Submitted! Thank you.";
+  document.getElementById("studentId").value = "";
+  document.querySelectorAll("#checkboxes input").forEach(b => b.checked = false);
+  document.getElementById("story").value = "";
   btn.disabled = false;
-  return;
+  loadResponses();
+
+} catch {
+  msg.style.color = "#ef4444";
+  msg.textContent = "Submission failed. Try again.";
+  btn.disabled = false;
 }
-    const studentId = document.getElementById("studentId").value.trim();
-    const boxes = [...document.querySelectorAll("#checkboxes input:checked")];
-    const difficulties = boxes.map(b => b.value).join(", ");
-    const story = document.getElementById("story").value.trim();
-    const msg = document.getElementById("msg");
-    const btn = document.getElementById("submitBtn");
-
-    // Validate
-    if (!VALID_ID.test(studentId)) {
-      msg.style.color = "#ef4444";
-      msg.textContent = "Invalid student number format.";
-      return;
-    }
-    if (!difficulties) {
-      msg.style.color = "#ef4444";
-      msg.textContent = "Select at least one difficulty.";
-      return;
-    }
-    if (!story) {
-      msg.style.color = "#ef4444";
-      msg.textContent = "Please write your story.";
-      return;
-    }
-
-    btn.disabled = true;
-    msg.style.color = "#64748b";
-    msg.textContent = "Submitting...";
-
-    try {
-      const res = await fetch(API, {
-        method: "POST",
-        body: JSON.stringify({ studentId, difficulties, story })
-      });
-      const result = await res.json();
-
-      if (result.status === "duplicate") {
-        msg.style.color = "#ef4444";
-        msg.textContent = "This student number has already submitted.";
-        btn.disabled = false;
-        return;
-      }
-
-      msg.style.color = "#16a34a";
-      msg.textContent = "Submitted! Thank you.";
-
-      // Reset form
-      document.getElementById("studentId").value = "";
-      document.querySelectorAll("#checkboxes input").forEach(b => b.checked = false);
-      document.getElementById("story").value = "";
-      btn.disabled = false;
-
-      loadResponses();
-    } catch {
-      msg.style.color = "#ef4444";
-      msg.textContent = "Submission failed. Try again.";
-      btn.disabled = false;
-    }
   }
 
   loadResponses();
