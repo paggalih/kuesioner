@@ -219,7 +219,7 @@
     <label class="field-label" for="studentId">NIM</label>
     <input type="text" id="studentId" placeholder="e.g. 12345678" maxlength="20">
 
-    <div class="part-title">Mengapa matematika sulit? <span style="font-weight:400;color:#64748b;">Pilih semua yang sesuai.</span></div>
+    <div class="part-title">Mengapa matematika sulit? <span style="font-weight:400;color:#64748b;">Pilih semua yang sesuai. Lewati jika tidak ada kendala.</span></div>
     <div class="checkbox-grid" id="checkboxes">
       <label><input type="checkbox" value="Kesulitan Konseptual"> Kesulitan Konseptual - Gagal membentuk skema abstrak. </label>
       <label><input type="checkbox" value="Kesulitan Prosedural"> Kesulitan Prosedural - Kesalahan eksekusi algoritmik.</label>
@@ -243,6 +243,10 @@
   </div>
 
   <div class="responses-section">
+<div style="margin-top: 32px;">
+  <h2 style="font-size:1.2rem; margin-bottom:16px;">Distribusi Kesulitan</h2>
+  <div id="chart"></div>
+</div>
     <h2>Berbagai Respon</h2>
     <div id="cards"><p style="color:#94a3b8;">Loading...</p></div>
     <div class="pagination">
@@ -288,6 +292,42 @@ const VALID_ID = /^\S+$/;
     document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${total}`;
     document.getElementById("prevBtn").disabled = currentPage === 1;
     document.getElementById("nextBtn").disabled = currentPage >= total;
+function renderChart() {
+  const counts = {};
+  allData.forEach(r => {
+    if (!r.difficulties) return;
+    r.difficulties.split(", ").forEach(d => {
+      counts[d] = (counts[d] || 0) + 1;
+    });
+  });
+
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const max = entries[0]?.[1] || 1;
+
+  if (!entries.length) {
+    document.getElementById("chart").innerHTML = "<p style='color:#94a3b8;'>No data yet.</p>";
+    return;
+  }
+
+  document.getElementById("chart").innerHTML = entries.map(([label, count]) => `
+    <div style="margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:3px;">
+        <span style="color:#334155;">${label}</span>
+        <span style="color:#64748b; font-weight:600;">${count}</span>
+      </div>
+      <div style="background:#e2e8f0; border-radius:999px; height:10px; overflow:hidden;">
+        <div style="
+          background:#2563eb;
+          width:${(count / max) * 100}%;
+          height:100%;
+          border-radius:999px;
+          transition: width 0.4s ease;
+        "></div>
+      </div>
+    </div>
+  `).join("");
+}
+renderChart(); // ← add this
   }
 
   function changePage(dir) {
