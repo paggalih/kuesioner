@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Difficulties Survey</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6fb;
+      color: #1e293b;
+      margin: 0;
+      padding: 40px 16px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .card-form {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      margin-bottom: 32px;
+    }
+
+    label.field-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      transition: border 0.2s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .part-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-grid label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.15s, border 0.15s;
+    }
+
+    .checkbox-grid label:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
+
+    .checkbox-grid input[type="checkbox"] {
+      accent-color: #3b82f6;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 20px;
+      transition: border 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    button.submit-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.submit-btn:hover { background: #1d4ed8; }
+    button.submit-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    #msg {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-height: 20px;
+    }
+
+    /* Responses */
+    .responses-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    .response-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .story-text {
+      color: #334155;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 7px 18px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .pagination button:hover:not(:disabled) { background: #f1f5f9; }
+    .pagination button:disabled { color: #cbd5e1; cursor: not-allowed; }
+
+    #pageInfo {
+      font-size: 0.88rem;
+      color: #64748b;
+    }
+
+    #cards-loading {
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 480px) {
+      .checkbox-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Mathematics Difficulties Survey</h1>
+  <p class="subtitle">Your response is anonymous. Student number is only used for verification.</p>
+
+  <div class="card-form">
+
+    <label class="field-label" for="studentId">Student Number</label>
+    <input type="text" id="studentId" placeholder="e.g. 12345678" maxlength="20">
+
+    <div class="part-title">Part 1 — What makes math difficult for you? <span style="font-weight:400;color:#64748b;">(choose all that apply)</span></div>
+    <div class="checkbox-grid" id="checkboxes">
+      <label><input type="checkbox" value="Math Anxiety"> Math Anxiety</label>
+      <label><input type="checkbox" value="Less Practice"> Less Practice</label>
+      <label><input type="checkbox" value="Weak Foundation"> Weak Foundation</label>
+      <label><input type="checkbox" value="Hard to Visualize"> Hard to Visualize</label>
+      <label><input type="checkbox" value="Lack of Motivation"> Lack of Motivation</label>
+      <label><input type="checkbox" value="Poor Time Management"> Poor Time Management</label>
+      <label><input type="checkbox" value="Language Barrier"> Language Barrier</label>
+      <label><input type="checkbox" value="Abstract Concepts"> Abstract Concepts</label>
+    </div>
+
+    <div class="part-title">Part 2 — Tell your story</div>
+    <textarea id="story" rows="5" placeholder="Describe your experience with mathematics in detail..."></textarea>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
+    <div id="msg"></div>
+
+  </div>
+
+  <div class="responses-section">
+    <h2>Student Responses</h2>
+    <div id="cards"><p id="cards-loading">Loading responses...</p></div>
+    <div class="pagination">
+      <button id="prevBtn" onclick="changePage(-1)" disabled>← Prev</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn" onclick="changePage(1)" disabled>Next →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // ← replace this
+  const VALID_ID = /^\d{8}$/; // adjust to your student ID format
+  const PAGE_SIZE = 5;
+
+  let allData = [];
+  let currentPage = 1;
+
+  function renderPage() {
+    const total = Math.ceil(allData.length / PAGE_SIZE);
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const slice = allData.slice(start, start + PAGE_SIZE);
+    const cards = document.getElementById("cards");
+
+    if (!slice.length) {
+      cards.innerHTML = "<p style='color:#94a3b8;'>No responses yet.</p>";
+      document.getElementById("pageInfo").textContent = "";
+      document.getElementById("prevBtn").disabled = true;
+      document.getElementById("nextBtn").disabled = true;
+      return;
+    }
+
+    cards.innerHTML = slice.map(r => `
+      <div class="response-card">
+        <div class="tags">
+          ${r.difficulties.split(", ").map(d => `<span class="tag">${d}</span>`).join("")}
+        </div>
+        <p class="story-text">${r.story}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${total}`;
+    document.getElementById("prevBtn").disabled = currentPage === 1;
+    document.getElementById("nextBtn").disabled = currentPage >= total;
+  }
+
+  function changePage(dir) {
+    const total = Math.ceil(allData.length / PAGE_SIZE);
+    currentPage = Math.min(Math.max(currentPage + dir, 1), total);
+    renderPage();
+  }
+
+  async function loadResponses() {
+    try {
+      const res = await fetch(API);
+      const data = await res.json();
+      allData = data.reverse();
+      currentPage = 1;
+      renderPage();
+    } catch {
+      document.getElementById("cards").innerHTML = "<p style='color:#ef4444;'>Failed to load responses.</p>";
+    }
+  }
+
+  async function submitForm() {
+    const studentId = document.getElementById("studentId").value.trim();
+    const boxes = [...document.querySelectorAll("#checkboxes input:checked")];
+    const difficulties = boxes.map(b => b.value).join(", ");
+    const story = document.getElementById("story").value.trim();
+    const msg = document.getElementById("msg");
+    const btn = document.getElementById("submitBtn");
+
+    // Validate
+    if (!VALID_ID.test(studentId)) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Invalid student number format.";
+      return;
+    }
+    if (!difficulties) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Select at least one difficulty.";
+      return;
+    }
+    if (!story) {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Please write your story.";
+      return;
+    }
+
+    btn.disabled = true;
+    msg.style.color = "#64748b";
+    msg.textContent = "Submitting...";
+
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        body: JSON.stringify({ studentId, difficulties, story })
+      });
+      const result = await res.json();
+
+      if (result.status === "duplicate") {
+        msg.style.color = "#ef4444";
+        msg.textContent = "This student number has already submitted.";
+        btn.disabled = false;
+        return;
+      }
+
+      msg.style.color = "#16a34a";
+      msg.textContent = "Submitted! Thank you.";
+
+      // Reset form
+      document.getElementById("studentId").value = "";
+      document.querySelectorAll("#checkboxes input").forEach(b => b.checked = false);
+      document.getElementById("story").value = "";
+      btn.disabled = false;
+
+      loadResponses();
+    } catch {
+      msg.style.color = "#ef4444";
+      msg.textContent = "Submission failed. Try again.";
+      btn.disabled = false;
+    }
+  }
+
+  loadResponses();
+</script>
+
+</body>
+</html>
