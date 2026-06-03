@@ -211,41 +211,44 @@
 
 <div class="container">
 
-  <h1>Mathematics Difficulties Survey</h1>
-  <p class="subtitle">Your response is anonymous. Student number is only used for verification.</p>
+  <h1>Survei Kesulitan Bermatematika</h1>
+  <p class="subtitle"> NIM hanya untuk verifikasi. Tidak akan ditampilkan.</p>
 
   <div class="card-form">
 
-    <label class="field-label" for="studentId">Student Number</label>
+    <label class="field-label" for="studentId">NIM</label>
     <input type="text" id="studentId" placeholder="e.g. 12345678" maxlength="20">
 
-    <div class="part-title">Part 1 — What makes math difficult for you? <span style="font-weight:400;color:#64748b;">(choose all that apply)</span></div>
+    <div class="part-title">Mengapa matematika sulit? <span style="font-weight:400;color:#64748b;">Pilih semua yang sesuai.</span></div>
     <div class="checkbox-grid" id="checkboxes">
-      <label><input type="checkbox" value="Math Anxiety"> Math Anxiety</label>
-      <label><input type="checkbox" value="Less Practice"> Less Practice</label>
-      <label><input type="checkbox" value="Weak Foundation"> Weak Foundation</label>
-      <label><input type="checkbox" value="Hard to Visualize"> Hard to Visualize</label>
-      <label><input type="checkbox" value="Lack of Motivation"> Lack of Motivation</label>
-      <label><input type="checkbox" value="Poor Time Management"> Poor Time Management</label>
-      <label><input type="checkbox" value="Language Barrier"> Language Barrier</label>
-      <label><input type="checkbox" value="Abstract Concepts"> Abstract Concepts</label>
+      <label><input type="checkbox" value="Kesulitan Konseptual"> Kesulitan Konseptual - Gagal membentuk skema abstrak. </label>
+      <label><input type="checkbox" value="Kesulitan Prosedural"> Kesulitan Prosedural - Kesalahan eksekusi algoritmik.</label>
+      <label><input type="checkbox" value="Kesulitan Representasi"> Kesulitan Representasi - Gagal translasi antar register (simbolik ↔ grafis ↔ verbal)</label>
+      <label><input type="checkbox" value="Kesulitan Logika"> Kesulitan Logika/Bukti - Gagal dalam deduksi formal. </label>
+      <label><input type="checkbox" value="Kesulitan Linguistik"> Kesulitan Linguistik - Salah membaca bahasa matematika.</label>
+      <label><input type="checkbox" value="Kesulitan Spasial"> Kesulitan Spasial/Geometri - Lemahnya penalaran visuospasial. </label>
+      <label><input type="checkbox" value="Diskalkulia"> Diskalkulia (Neurologis) - Defisit number sense</label>
+      <label><input type="checkbox" value="Kesulitan Metakognitif"> Kesulitan Metakognitif - Gagal memonitor proses pemecahan masalah</label>
+      <label><input type="checkbox" value="Kecemasan Matematika"> Kesulitan Afektif - Kecemasan matematika</label>
+      <label><input type="checkbox" value="Kesulitan Transfer"> Kesulitan Transfer - Gagal transfer dekat maupun jauh.</label>
+
     </div>
 
-    <div class="part-title">Part 2 — Tell your story</div>
-    <textarea id="story" rows="5" placeholder="Describe your experience with mathematics in detail..."></textarea>
+    <div class="part-title">Boleh uraikan detilnya</div>
+    <textarea id="story" rows="5" placeholder="Ceritakan detil pengalaman dengan matematika ..."></textarea>
 
-    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Kirim</button>
     <div id="msg"></div>
 
   </div>
 
   <div class="responses-section">
-    <h2>Student Responses</h2>
-    <div id="cards"><p style="color:#94a3b8;">Loading responses...</p></div>
+    <h2>Berbagai Respon</h2>
+    <div id="cards"><p style="color:#94a3b8;">Loading...</p></div>
     <div class="pagination">
-      <button id="prevBtn" onclick="changePage(-1)" disabled>← Prev</button>
+      <button id="prevBtn" onclick="changePage(-1)" disabled>← Sebelumnya</button>
       <span id="pageInfo"></span>
-      <button id="nextBtn" onclick="changePage(1)" disabled>Next →</button>
+      <button id="nextBtn" onclick="changePage(1)" disabled>Selanjutnya →</button>
     </div>
   </div>
 
